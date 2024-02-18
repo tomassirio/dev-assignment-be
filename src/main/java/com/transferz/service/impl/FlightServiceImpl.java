@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -20,5 +21,10 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight addFlight(@Valid Flight flight) {
         return flightRepository.save(flight);
+    }
+
+    @Override
+    public Optional<Flight> getFlight(String code) {
+        return flightRepository.findByCode(code);
     }
 }
