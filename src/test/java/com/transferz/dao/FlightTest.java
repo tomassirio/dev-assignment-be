@@ -10,18 +10,22 @@ class FlightTest {
     @Test
     void testFlightConstructor() {
         String code = "code";
-        Flight flight = new Flight();
         Airport origin = new Airport();
+        origin.setCode("OCode");
+        origin.setCountry("OCountry");
+        origin.setName("OName");
+
         Airport destination = new Airport();
+        destination.setCode("DCode");
+        destination.setCountry("DCountry");
+        destination.setName("DName");
+
         LocalDateTime departureTime = LocalDateTime.now();
-        LocalDateTime arrivalTime = LocalDateTime.now();
+        LocalDateTime arrivalTime = LocalDateTime.now().plusHours(2);
 
-        flight.setCode(code);
-        flight.setOriginAirport(origin);
-        flight.setDestinationAirport(destination);
-        flight.setDepartureTime(departureTime);
-        flight.setArrivalTime(arrivalTime);
+        Flight flight = new Flight(code, origin, destination, departureTime, arrivalTime);
 
+        assertThat(flight.getFlightId()).isNotNull();
         assertThat(flight.getCode()).isEqualTo(code);
         assertThat(flight.getOriginAirport()).isEqualTo(origin);
         assertThat(flight.getDestinationAirport()).isEqualTo(destination);
