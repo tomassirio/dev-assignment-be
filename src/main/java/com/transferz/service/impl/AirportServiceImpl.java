@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Service
 public class AirportServiceImpl implements AirportService {
@@ -27,5 +28,10 @@ public class AirportServiceImpl implements AirportService {
     @Override
     public Airport addAirport(@Valid Airport airport) {
         return airportRepository.save(airport);
+    }
+
+    @Override
+    public Optional<Airport> getAirport(String code) {
+        return airportRepository.findByCode(code);
     }
 }
