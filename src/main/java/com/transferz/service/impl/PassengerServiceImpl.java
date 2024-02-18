@@ -3,6 +3,7 @@ package com.transferz.service.impl;
 import com.transferz.config.FlightProperties;
 import com.transferz.dao.Flight;
 import com.transferz.dao.Passenger;
+import com.transferz.exception.AvailableFlightNotFoundException;
 import com.transferz.repository.FlightRepository;
 import com.transferz.repository.PassengerRepository;
 import com.transferz.service.PassengerService;
@@ -32,9 +33,9 @@ public class PassengerServiceImpl implements PassengerService {
 
         if (isFlightFull(flight.getCode())) {
             flightRepository.findAvailableFlight(flightProperties.getMaxPassengers())
-                    .ifPresentOrElse(passenger::setFlight, () -> {
-                        throw new RuntimeException("No available flights");
-                    });
+                .ifPresentOrElse(passenger::setFlight, () -> {
+                    throw new AvailableFlightNotFoundException();
+                });
         }
 
         return passengerRepository.save(passenger);
