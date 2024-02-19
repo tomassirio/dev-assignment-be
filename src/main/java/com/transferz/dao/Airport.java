@@ -8,8 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -17,8 +20,9 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Table(name = "airports")
-public class Airport {
+public class Airport implements Serializable {
 	@Id
+	@GeneratedValue
 	@Column(name = "airport_id")
 	private UUID airportId;
 

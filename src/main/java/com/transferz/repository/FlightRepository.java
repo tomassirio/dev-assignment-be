@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface FlightRepository extends JpaRepository<Flight, UUID> {
     @Query("SELECT f FROM Flight f WHERE (SELECT COUNT(p) FROM Passenger p WHERE p.flight = f) <= :maxPassengers")
     Optional<Flight> findAvailableFlight(@Param("maxPassengers") long maxPassengers);
+
+    Optional<Flight> findByCode(String code);
 }

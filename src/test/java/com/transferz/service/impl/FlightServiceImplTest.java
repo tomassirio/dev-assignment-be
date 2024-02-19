@@ -13,9 +13,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 public class FlightServiceImplTest {
@@ -37,7 +38,7 @@ public class FlightServiceImplTest {
 
     @Test
     public void addFlight_WithValidFlight_SavesFlight() {
-        Airport originAirport = new Airport("JFK", "John F Kennedy International", "USA");
+        Airport originAirport = new Airport("EZE", "John F Kennedy International", "ARG");
         Airport destAirport = new Airport("LAX", "Los Angeles International", "USA");
         Flight flight = new Flight("FN123", originAirport, destAirport,
                 LocalDateTime.now().plusHours(5),
@@ -62,5 +63,28 @@ public class FlightServiceImplTest {
         Set<ConstraintViolation<Flight>> violations = validator.validate(invalidFlight);
 
         assertEquals(5, violations.size());
+    }
+
+    @Test
+    void getFlight_returns_optional_of_flight_if_exists() {
+        Airport originAirport = new Airport("EZE", "Ezeiza - Ministro Pistarini", "ARG");
+        Airport destAirport = new Airport("LAX", "Los Angeles International", "USA");
+        Flight flight = new Flight("FN123", originAirport, destAirport,
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().plusHours(10));
+
+        when(flightRepository.findByCode("FN123")).thenReturn(Optional.of(flight));
+
+        Optional<Flight> result = flightService.getFlight("FN123");
+        assertTrue(result.isPresent());
+        assertEquals(flight, result.get());
+    }
+
+    @Test
+    void getFlight_returns_empty_optional_if_not_exists() {
+        when(flightRepository.findByCode("XYZ")).thenReturn(Optional.empty());
+
+        Optional<Flight> result = flightService.getFlight("XYZ");
+        assertFalse(result.isPresent());
     }
 }
