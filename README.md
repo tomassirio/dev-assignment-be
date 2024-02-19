@@ -1,67 +1,97 @@
 # Transferz development challenge
-###### v1.2
+## By Tomas Sirio
 
-## Introduction
-This is development challenge for Java developer candidates at transferz. The goal of this task is to understand your way of thinking and problem-solving skills around composing new services, database design, SQL composing, understandign of multi-threading and unit-testing.
+---
 
-We are expecting that this task should take no more than 2 hours (including reading this documentation). Any result is important for us, if you feel that something is not solved it is not a problem. TODOs and comments in the source code are welcome.
+## Getting Started
 
-Please fork this repository into your own GitHub account and send us the link to the repository when you have finished.
+### Prerequisites
 
-## The challenge
-During high tide the dikes in The Netherlands have given way and we need to evacuate residents as soon as possible. One way to do this is by airlifting people out from Schiphol Airport. As this is an emergency, we're not concerned with where passengers will be taken, as long as we get them out as soon as possible. Each airplane used in the evacuation routine can have a maximum capacity of 150 passengers.
+The following items should be installed and available in your system:
 
-Please create a REST API service which handles data about airports, flights and passengers. At this time there is no need to think about scaling and running multiple instances of this service - assume that it will be running as a single instance. 
+* JDK 17
+* Maven 3.8+
+* Docker 20.10+
+* Docker Compose 1.27+
+* PostgreSQL 
 
-## You should:
-* use Java 17, Spring Boot 2.6+, Maven 3.5+ (if you prefer Gradle that's also fine)
-* select a relational database like H2, MariaDB, PostgreSQL, etc.
-* create relevant tables for airports, flights and passengers (and another DB entities if needed) 
-* create relevant DAOs, services and controllers
-* add business logic to accomplish the tasks below
-* ensure the application has at least 80% test coverage
-* change the initial design to get better performance if needed
-* ensure the Maven build is successful
-* ensure the final JAR file is runnable
-                       
-## Database description
+### Building the Project
 
-* Airport table should have at least:
-  * `name` column as varchar(255)
-  * `code` column as varchar(20)
-  * `country` column as varchar(60)
-* Flight table should have at least:
-  * `code` column as varchar(20)
-  * `originAirportCode` column as varchar(20)
-  * `destinationAirportCode` column as varchar(20)
-  * `departureDateTime` column as <your choice type>
-  * `arrivalDateTime` column as <your choice type>
-* Passenger table should have at least:
-  * `name` column as varchar(1024)
-  * `flightCode` column as varchar(20)
+Build the project using Maven:
 
-During the database design, please think about additional constraints and type of `id` field and way of its generation for better performance and security.
+```bash
+./mvnw clean package
+```
 
-If you feel the database structure above is insufficient to cover the requirements you are free to change the structure as you see fit.
+#### Docker Build
 
-## REST API description 
+Build Docker image:
 
-We would like to see these endpoints:
-* Retrieve all airports with pagination and optional filtering on name and code
-* Add a new airport with validation for fields and unique code and name
-* Add new passenger on a flight with validation for fields and unique name per flight
-      
-## Business logic
+```bash 
+docker build -t backend-app .
+```
 
-Additional functionality needed: 
-* On each "Add new passenger" REST request, the service should calculate the amount of passengers per flight:
-  * If the amount of passengers is 150 (amount externally configurable) or higher, the flight should depart and new passengers should be booked on the next flight
-  * The destination of the flight should be auto-selected based on the available airports
+### Running the project
 
-## Notes
-* Please implement all part of the service with performance in mind
-* Keep in mind that the service can receive parallel requests
-* Remember that good tests cover negative scenarios as well
-* You have any questions feel free to ask them, we are here to help you
-* Do not forget to re-read the task to be sure every topic is covered
-* Good luck!
+To run the project, you can use Maven's Wrapper to run the self-contained Spring-boot application:
+
+```bash
+./mvnw spring-boot:run 
+```
+
+#### Docker-compose Run
+
+Here's how you can start the Spring Boot app with Docker Compose:
+
+1. Define your environment variables in `.env` file:
+2. Run Docker Compose:
+
+```bash
+docker-compose up
+```
+
+This will start all services defined in `docker-compose.yml`. The application will be reachable at `http://localhost:8080`.
+
+#### Swagger-UI
+
+Additionally, a Swagger interface was configured within the project, and it's accessible at http://localhost:8080/swagger-ui/index.html#/
+
+---
+
+### Configuration Properties
+
+To change the application's configuration like `flight.maxPassengers`, you can do so by updating the corresponding environment variable in the .env file or Docker Compose file:
+
+```bash 
+FLIGHT_MAXPASSENGERS=200 docker-compose up -d --force-recreate
+```
+
+Else you can do it via Spring-boot by running the application with a different value:
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--flight.maxPassengers=200"
+```
+
+### Testing Endpoints
+
+We provide a bash script to test the major functionalities of the service. You will need a bash shell to run it. Here's how:
+
+1. Ensure you have the required permissions to run the script. You can add these permissions on a Unix-based system using:
+
+    ```bash
+    chmod +x src/main/resources/test_endpoints.sh
+    ```
+
+2. Run the script using:
+
+    ```bash
+    ./src/main/resources/test_endpoints.sh
+    ```
+
+Remember that the script requires the service to be up and running, so make sure to start the service before executing the script.
+
+---
+
+## 📞 Contact
+
+For any questions or clarifications, reach out to the project owner at [tomassirio@gmail.com](mailto:tomassirio@gmail.com).
