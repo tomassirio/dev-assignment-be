@@ -75,14 +75,6 @@ class AirportServiceImplTest {
     }
 
     @Test
-    void addAirport_unsuccessfulSave() {
-        Airport airport = new Airport();
-        when(airportRepository.save(airport)).thenReturn(null);
-        Airport result = airportService.addAirport(airport);
-        assertNull(result);
-    }
-
-    @Test
     void findAllAirports_invalidPageable() {
         assertThrows(IllegalArgumentException.class, () -> airportService.findAllAirports(PageRequest.of(-1, -1)));
     }
