@@ -17,11 +17,10 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -90,14 +89,14 @@ class AirportServiceImplTest {
 
     @Test
     public void addAirport_WithValidAirport_SavesAirport() {
-        Airport airport = new Airport("JFK", "John F Kennedy International", "USA");
+        Airport airport = new Airport("EZE", "Ezeiza - Ministro Pistarini", "ARG");
 
         when(airportRepository.save(any(Airport.class))).thenReturn(airport);
         Airport savedAirport = airportService.addAirport(airport);
 
-        assertEquals("JFK", savedAirport.getCode());
-        assertEquals("John F Kennedy International", savedAirport.getName());
-        assertEquals("USA", savedAirport.getCountry());
+        assertEquals("EZE", savedAirport.getCode());
+        assertEquals("Ezeiza - Ministro Pistarini", savedAirport.getName());
+        assertEquals("ARG", savedAirport.getCountry());
     }
 
     @Test
@@ -107,5 +106,26 @@ class AirportServiceImplTest {
         Set<ConstraintViolation<Airport>> violations = validator.validate(invalidAirport);
 
         assertEquals(3, violations.size());
+    }
+
+    @Test
+    void getAirport_returns_optional_of_airport_if_exists() {
+        Airport airport = new Airport("EZE", "Ezeiza - Ministro Pistarini", "ARG");
+
+        when(airportRepository.findByCode("EZE")).thenReturn(Optional.of(airport));
+
+        Optional<Airport> result = airportService.getAirport("EZE");
+        assertTrue(result.isPresent());
+        assertEquals("EZE", result.get().getCode());
+        assertEquals("Ezeiza - Ministro Pistarini", result.get().getName());
+        assertEquals("ARG", result.get().getCountry());
+    }
+
+    @Test
+    void getAirport_returns_empty_optional_if_not_exists() {
+        when(airportRepository.findByCode("ABC")).thenReturn(Optional.empty());
+
+        Optional<Airport> result = airportService.getAirport("ABC");
+        assertFalse(result.isPresent());
     }
 }
