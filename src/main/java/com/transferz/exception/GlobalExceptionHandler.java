@@ -26,4 +26,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
+
+    @ExceptionHandler(FlightNotFoundException.class)
+    protected ResponseEntity<Object> handleFlightNotFound(
+            FlightNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
