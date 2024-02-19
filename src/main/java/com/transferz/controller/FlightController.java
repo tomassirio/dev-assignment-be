@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/v1/flights")
 public class FlightController {
@@ -27,7 +29,7 @@ public class FlightController {
     }
 
     @PostMapping
-    public ResponseEntity<Flight> createFlight(@RequestBody FlightDTO flightDTO) {
+    public ResponseEntity<Flight> createFlight(@Valid @RequestBody FlightDTO flightDTO) {
         Airport origin = airportService.getAirport(flightDTO.getOriginAirportCode())
                 .orElseThrow(() -> new AirportNotFoundException(flightDTO.getOriginAirportCode()));
         Airport destination = airportService.getAirport(flightDTO.getDestinationAirportCode())

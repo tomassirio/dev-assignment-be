@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/v1/passengers")
 public class PassengerController {
@@ -26,7 +28,7 @@ public class PassengerController {
     }
 
     @PostMapping
-    public ResponseEntity<Passenger> createPassenger(@RequestBody PassengerDTO passengerDTO){
+    public ResponseEntity<Passenger> createPassenger(@Valid @RequestBody PassengerDTO passengerDTO){
         Flight flight = flightService.getFlight(passengerDTO.getFlightCode())
                 .orElseThrow(() -> new FlightNotFoundException(passengerDTO.getFlightCode()));
 
